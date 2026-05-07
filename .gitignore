@@ -1,0 +1,10 @@
+# Obsidian
+.obsidian/
+trash/
+
+# Build output
+_mkdocs_build/
+_site/
+
+# macOS
+.DS_Store
