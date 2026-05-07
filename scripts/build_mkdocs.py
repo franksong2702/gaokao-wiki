@@ -37,6 +37,7 @@ DIR_NAMES = {
 SECTION_CONFIG = {
     "语文": {"prefix": r"^\d+-", "order_key": lambda x: int(re.match(r'(\d+)', x).group(1)) if re.match(r'(\d+)', x) else 999},
     "数学": {"prefix": r"^M\d+-", "order_key": lambda x: int(re.match(r'M(\d+)', x).group(1)) if re.match(r'M(\d+)', x) else 999},
+    "英语": {"prefix": r"^E\d+-", "order_key": lambda x: int(re.match(r'E(\d+)', x).group(1)) if re.match(r'E(\d+)', x) else 999},
 }
 
 
@@ -210,6 +211,8 @@ def make_title(name):
     if name in DIR_NAMES:
         return DIR_NAMES[name]
     title = name.replace(".md", "")
+    # 处理 E1-翻译句型.md -> 翻译句型
+    title = re.sub(r'^E\d+-', '', title)
     # 处理 M1-函数与导数.md -> 函数与导数
     title = re.sub(r'^M\d+-', '', title)
     # 处理 01-赤壁赋-苏轼.md -> 赤壁赋 · 苏轼
@@ -299,7 +302,7 @@ def write_mkdocs_config(nav, dst_dir):
     """写入 mkdocs.yml 配置文件。"""
     config = {
         "site_name": "高考复习 Wiki",
-        "site_description": "高考语数必背篇目 · Cross Reading 复习资料",
+        "site_description": "高考语数英必背篇目 · Cross Reading 复习资料",
         "site_author": "学夫",
         "repo_url": "https://github.com/franksong2702/gaokao-wiki",
         "repo_name": "franksong2702/gaokao-wiki",
