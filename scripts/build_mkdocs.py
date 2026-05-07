@@ -33,6 +33,12 @@ DIR_NAMES = {
     "gaokao-review": "高考文言文复习",
 }
 
+# 分组配置
+SECTION_CONFIG = {
+    "语文": {"prefix": r"^\d+-", "order_key": lambda x: int(re.match(r'(\d+)', x).group(1)) if re.match(r'(\d+)', x) else 999},
+    "数学": {"prefix": r"^M\d+-", "order_key": lambda x: int(re.match(r'M(\d+)', x).group(1)) if re.match(r'M(\d+)', x) else 999},
+}
+
 
 def wiki_to_relative_path(source_rel, target_abs):
     """
@@ -204,6 +210,8 @@ def make_title(name):
     if name in DIR_NAMES:
         return DIR_NAMES[name]
     title = name.replace(".md", "")
+    # 处理 M1-函数与导数.md -> 函数与导数
+    title = re.sub(r'^M\d+-', '', title)
     # 处理 01-赤壁赋-苏轼.md -> 赤壁赋 · 苏轼
     title = re.sub(r'^\d+-', '', title)
     title = title.replace('-', ' · ')
@@ -214,28 +222,54 @@ def generate_nav(docs_root):
     """从目录结构生成 MkDocs nav 配置。"""
     nav = []
 
-    # 顶层文件
+    # 顶层文件（README等）
     for fname in TOP_FILES:
         fpath = f"{fname}.md"
         full = os.path.join(docs_root, fpath)
         if os.path.exists(full):
             nav.append({make_title(fname): fpath})
 
-    # 目录和文件
+    # 收集所有 md 文件（跳过顶层文件和隐藏文件）
+    all_files = []
     for entry in sorted(os.listdir(docs_root)):
         if entry.startswith(".") or entry in SKIP:
             continue
-
-        if entry.endswith(".md") and entry.replace(".md", "") in [f.replace(".md", "") for f in TOP_FILES]:
+        if not entry.endswith(".md"):
             continue
+        base = entry.replace(".md", "")
+        if base in [f.replace(".md", "") for f in TOP_FILES]:
+            continue
+        all_files.append(entry)
 
+    # 按前缀分组
+    for section_name, config in SECTION_CONFIG.items():
+        section_files = [f for f in all_files if re.match(config["prefix"], f)]
+        section_files.sort(key=lambda f: config["order_key"](f.replace(".md", "")))
+        if section_files:
+            section_nav = []
+            for fname in section_files:
+                section_nav.append({make_title(fname): fname})
+            nav.append({section_name: section_nav})
+
+    # 其他未分组的文件
+    grouped = set()
+    for config in SECTION_CONFIG.values():
+        for entry in all_files:
+            if re.match(config["prefix"], entry):
+                grouped.add(entry)
+    ungrouped = [f for f in all_files if f not in grouped]
+    for fname in ungrouped:
+        nav.append({make_title(fname): fname})
+
+    # 子目录
+    for entry in sorted(os.listdir(docs_root)):
+        if entry.startswith(".") or entry in SKIP:
+            continue
         fpath = os.path.join(docs_root, entry)
         if os.path.isdir(fpath):
             subdir_nav = build_subdir_nav(entry, fpath, docs_root)
             if subdir_nav:
                 nav.append({make_title(entry): subdir_nav})
-        elif entry.endswith(".md"):
-            nav.append({make_title(entry): entry})
 
     return nav
 
@@ -264,8 +298,8 @@ def build_subdir_nav(dirname, dirpath, docs_root):
 def write_mkdocs_config(nav, dst_dir):
     """写入 mkdocs.yml 配置文件。"""
     config = {
-        "site_name": "高考文言文 Wiki",
-        "site_description": "高考必背文言文篇目 · Cross Reading 复习资料",
+        "site_name": "高考复习 Wiki",
+        "site_description": "高考语数必背篇目 · Cross Reading 复习资料",
         "site_author": "学夫",
         "repo_url": "https://github.com/franksong2702/gaokao-wiki",
         "repo_name": "franksong2702/gaokao-wiki",
