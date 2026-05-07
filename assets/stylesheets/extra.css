@@ -1,0 +1,88 @@
+/* 手机端适配优化 */
+@media screen and (max-width: 76.2344em) {
+  /* 正文 */
+  .md-typeset {
+    font-size: 0.75rem !important;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.3rem !important;
+  }
+
+  .md-typeset h2 {
+    font-size: 1.1rem !important;
+  }
+
+  .md-typeset h3 {
+    font-size: 0.95rem !important;
+  }
+
+  .md-typeset p,
+  .md-typeset li,
+  .md-typeset td,
+  .md-typeset th {
+    font-size: 0.8rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .md-typeset blockquote {
+    font-size: 0.75rem !important;
+    padding-left: 0.8rem !important;
+  }
+
+  .md-typeset table {
+    font-size: 0.7rem !important;
+  }
+
+  .md-typeset code {
+    font-size: 0.7rem !important;
+  }
+
+  .md-nav__link {
+    font-size: 0.75rem !important;
+    padding: 0.3rem 0.6rem !important;
+  }
+
+  .md-nav--primary .md-nav__item {
+    padding: 0.1rem 0 !important;
+  }
+
+  .md-search__input {
+    font-size: 0.75rem !important;
+  }
+
+  .md-content__inner {
+    padding: 0.8rem 0.8rem 1.5rem !important;
+  }
+}
+
+/* 小屏幕手机 (< 375px) */
+@media screen and (max-width: 23.4375em) {
+  .md-typeset {
+    font-size: 0.8rem !important;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.2rem !important;
+  }
+
+  .md-typeset h2 {
+    font-size: 1rem !important;
+  }
+
+  .md-typeset p,
+  .md-typeset li,
+  .md-typeset td,
+  .md-typeset th {
+    font-size: 0.85rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .md-content__inner {
+    padding: 0.6rem 0.5rem 1.2rem !important;
+  }
+
+  .md-typeset table {
+    font-size: 0.72rem !important;
+  }
+}
