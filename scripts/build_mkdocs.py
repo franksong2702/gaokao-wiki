@@ -154,6 +154,7 @@ def convert_wikilink_in_file(content, source_rel):
 
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico"}
+ASSET_EXTENSIONS = {".css", ".js"}
 
 
 def copy_and_convert(src_root, dst_root):
@@ -175,7 +176,8 @@ def copy_and_convert(src_root, dst_root):
             os.makedirs(os.path.dirname(dst), exist_ok=True)
 
             # 图片等静态资源直接复制
-            if os.path.splitext(fname)[1].lower() in IMAGE_EXTENSIONS:
+            ext = os.path.splitext(fname)[1].lower()
+            if ext in IMAGE_EXTENSIONS or ext in ASSET_EXTENSIONS:
                 with open(src, "rb") as f_in, open(dst, "wb") as f_out:
                     f_out.write(f_in.read())
                 converted_files.append(src_rel)
@@ -320,6 +322,10 @@ def write_mkdocs_config(nav, dst_dir):
                 "lang": ["zh"],
                 "separator": r"[\s\-,:!=\[\]()\"'/]+",
             }},
+        ],
+
+        "extra_css": [
+            "assets/stylesheets/extra.css",
         ],
 
         "extra": {
