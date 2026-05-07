@@ -1,6 +1,6 @@
 # 高考复习 Wiki
 
-高考语数必背篇目 · Cross Reading 复习资料
+高考语数英必背篇目 · Cross Reading 复习资料
 
 ## 语文 · 文言文
 
